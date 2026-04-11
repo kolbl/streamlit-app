@@ -1,0 +1,14 @@
+[project]
+name = "streamlit-app"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "data-analytics==0.1.0.dev2",
+    "streamlit>=1.56.0",
+]
+
+[tool.uv]
+extra-index-url = ["https://test.pypi.org/simple/"]
+index-strategy = "unsafe-best-match"

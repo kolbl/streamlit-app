@@ -205,3 +205,8 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+
+# not including the data folder in the repo
+data/
+.vscode/settings.json
