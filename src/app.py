@@ -147,6 +147,21 @@ def main() -> None:
         "“Shadow” ≈ longer winter; no shadow ≈ early spring. "
         "Null means no recorded outcome for that year."
     )
+    st.markdown(
+        """Groundhog Day is a lighthearted holiday celebrated annually across North America
+in which ‘prognosticating’ animals predict the onset of spring.
+
+Traditionally, on February 2nd, various groundhogs across North America are
+consulted by local public figures (often a mayor) for an annual weather
+prediction:
+
+- If the groundhog ‘sees its shadow’, it means 6 more weeks of winter
+- If the groundhog doesn’t see its shadow, spring will come early
+
+More background and listings of prognosticators:
+[GROUNDHOG-DAY.com](https://groundhog-day.com/).
+"""
+    )
 
     try:
         groundhogs = fetch_groundhogs()

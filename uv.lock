@@ -169,7 +169,7 @@ wheels = [
 
 [[package]]
 name = "data-analytics"
-version = "0.1.0.dev2"
+version = "0.1.0.dev1"
 source = { registry = "https://test.pypi.org/simple/" }
 dependencies = [
     { name = "black" },
@@ -177,9 +177,9 @@ dependencies = [
     { name = "isort" },
     { name = "pandas" },
 ]
-sdist = { url = "https://test-files.pythonhosted.org/packages/65/21/4211a59f34a197452649ca7d06c6decafbdf7c56bbd3625abf09cdfb6894/data_analytics-0.1.0.dev2.tar.gz", hash = "sha256:2ae2574b7b53067c448c64bd085304aad6175c97a1c6bd208338725ff7c33c13", size = 4026, upload-time = "2026-04-11T10:57:47.185Z" }
+sdist = { url = "https://test-files.pythonhosted.org/packages/88/48/48a2f9e2c7b74278921b03a55b0520ef1da8e31658426eb2cb47318b6624/data_analytics-0.1.0.dev1.tar.gz", hash = "sha256:d8129c424a01540e17c19ac63e85973472b66833a04b1779c4e3346b0adac5e8", size = 3756, upload-time = "2026-04-03T18:46:25.049Z" }
 wheels = [
-    { url = "https://test-files.pythonhosted.org/packages/8f/fc/438482c77cd8051bed6acca16272146160762ce3243ab994aaa38c256ee6/data_analytics-0.1.0.dev2-py3-none-any.whl", hash = "sha256:2d4c69ba56d26697dafc1c345d73a7bdcc83b481ecf926a9173f0c6f96d0ca2f", size = 5363, upload-time = "2026-04-11T10:57:47.927Z" },
+    { url = "https://test-files.pythonhosted.org/packages/e2/5b/3b4d7d99630446597e22c443aa9b6f1937f16d84c06ac2e9b48d8c7b6d08/data_analytics-0.1.0.dev1-py3-none-any.whl", hash = "sha256:435e9275ec7b6d93ccfde2f89cf8ea226dc3e27dd9439d6f64dffe88e73b4d39", size = 5134, upload-time = "2026-04-03T18:46:25.892Z" },
 ]
 
 [[package]]
@@ -805,7 +805,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "data-analytics", specifier = "==0.1.0.dev2" },
+    { name = "data-analytics", specifier = "==0.1.0.dev1" },
     { name = "streamlit", specifier = ">=1.56.0" },
 ]
 

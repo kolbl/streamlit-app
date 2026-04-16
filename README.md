@@ -1,34 +1,80 @@
-# streamlit-app
-Repo with streamlit app for "Ready, Set, Publish: Write Your First Python Package" workshop
+# Streamlit Workshop App
 
+Companion Streamlit app for the **"Ready, Set, Publish: Write Your First Python Package"** workshop.
 
+This project demonstrates how to run a Streamlit app that depends on a packaged Python library (for example, `data_analytics`).
 
+## Prerequisites
 
-uv init --lib data-analytics --python 3.13
+- Python 3.13
+- [`uv`](https://docs.astral.sh/uv/)
+
+## Quick Start
+
+From the project root:
+
+```bash
 uv sync
-select pytjom interpreter
-uv add "data-analytics==0.1.0.dev1" \
-  --extra-index-url https://test.pypi.org/simple/
-  
-Run streamlit app:
-
-
-One-time setup
-From the repo root (streamlit-app):
-
-uv sync
-That creates/updates the project venv and installs what’s in pyproject.toml (including Streamlit).
-
-Run the app
 uv run streamlit run src/app.py
-Equivalent:
+```
 
+`uv sync` creates/updates `.venv` and installs dependencies from `pyproject.toml`.
+
+## Run Commands
+
+Primary command:
+
+```bash
+uv run streamlit run src/app.py
+```
+
+Equivalent command:
+
+```bash
 uv run python -m streamlit run src/app.py
-Stay in the project root when you run it so paths and imports match how the project is laid out.
+```
 
-Optional: activate the venv yourself
-source .venv/bin/activate   # on Windows Git Bash/WSL/Linux
+Always run commands from the repository root so imports and paths resolve correctly.
+
+## Optional: Activate the Virtual Environment
+
+You usually do not need this because `uv run` handles it automatically.
+
+```bash
+source .venv/bin/activate
 streamlit run src/app.py
-uv run is usually enough: it uses the project’s .venv without activating it.
+```
 
-Note: src/app.py imports data_analytics. If that isn’t installed as a dependency or on PYTHONPATH, uv run streamlit run src/app.py may fail on import until that package is wired up in pyproject.toml or you run with the right PYTHONPATH. If you hit an import error, say what it prints and we can align the project config.
+## Install Workshop Package from TestPyPI
+
+If your app depends on the workshop package, install it like this:
+
+```bash
+uv add "data-analytics_<...>==0.1.0.dev1" \
+  --extra-index-url https://test.pypi.org/simple/ \
+  --index-strategy unsafe-best-match
+```
+
+Then re-sync:
+
+```bash
+uv sync
+```
+
+## Troubleshooting
+
+If you see an import error for `data_analytics`:
+
+- confirm the package is listed in `pyproject.toml`
+- run `uv sync` again
+- make sure you are launching from the project root
+
+## Project Structure
+
+```text
+streamlit-app/
+├── src/
+│   └── app.py
+├── pyproject.toml
+└── README.md
+```
