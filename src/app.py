@@ -9,7 +9,11 @@ from urllib.request import urlopen
 import pandas as pd
 import streamlit as st
 
-from data_analytics import calculate_max_of_column, calculate_min_of_column
+from data_analytics.column_statistics import (
+    calculate_max_of_column,
+    calculate_min_of_column,
+    calculate_span_of_column,
+)
 
 API_URL = "https://groundhog-day.com/api/v1/groundhogs"
 
@@ -91,6 +95,7 @@ def groundhog_summary_stats(pred_df: pd.DataFrame) -> pd.DataFrame:
         )
         meta["prediction_start_year"] = calculate_min_of_column(sub_y, "year")
         meta["prediction_end_year"] = calculate_max_of_column(sub_y, "year")
+        meta["prediction_year_span"] = calculate_span_of_column(sub_y, "year")
         shadow_known = group["shadow"].dropna()
         meta["p_saw_shadow_if_known"] = (
             float(shadow_known.astype("float64").mean())
@@ -127,6 +132,7 @@ def groundhog_catalog_table(
             "groundhog_id",
             "prediction_start_year",
             "prediction_end_year",
+            "prediction_year_span",
             "prediction_years",
             "p_saw_shadow_if_known",
         ]
@@ -185,9 +191,10 @@ More background and listings of prognosticators:
     st.subheader("Groundhogs")
     st.caption(
         "Prediction **timespan** uses ``calculate_min_of_column`` / "
-        "``calculate_max_of_column`` on ``year``. Shadow share is the mean of "
-        "``shadow`` over years with a recorded value. API provides text, images, "
-        "and links."
+        "``calculate_max_of_column`` on ``year``; **active duration** uses "
+        "``calculate_span_of_column`` (last year minus first year). Shadow share "
+        "is the mean of ``shadow`` over years with a recorded value. API "
+        "provides text, images, and links."
     )
     for _, row in catalog_df.sort_values("name").iterrows():
         ys, ye = row["prediction_start_year"], row["prediction_end_year"]
@@ -227,6 +234,10 @@ More background and listings of prognosticators:
                     st.caption(
                         f"Share of recorded years with shadow: **{rate:.1%}**"
                     )
+                span_years = row.get("prediction_year_span")
+                if pd.notna(span_years):
+                    n = int(span_years)
+                    st.caption(f"Active since **{n}** years.")
 
     st.subheader("Active prediction years")
     st.caption(
