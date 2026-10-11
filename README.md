@@ -18,7 +18,7 @@ uv sync
 uv run streamlit run src/app.py
 ```
 
-`uv sync` creates/updates `.venv` and installs dependencies from `pyproject.toml`.
+`uv sync` creates or updates `.venv` and installs dependencies from `pyproject.toml`. `data-analytics` comes from the local package index, so that server has to be running before `uv sync`.
 
 ## Run Commands
 
@@ -41,14 +41,24 @@ streamlit run src/app.py
 ```
 
 
-If you are using Visual Studio Code - just select the Python interpreter from the freshly created venv folder .venv/bin/python. 
+If you are using Visual Studio Code or Cursor, select the Python interpreter at `.venv/bin/python`. The **Debug Streamlit** launch configuration starts `src/app.py` under the debugger.
 
-## Install Workshop Package from TestPyPI
+## Install the workshop package from a local index
 
-If your app depends on the workshop package, install it like this:
+`data-analytics` (`>=0.3.0`) comes from a local package index. `pyproject.toml` lists that server twice, as `localhost` and as `127.0.0.1`. `uv.lock` resolves packages from `http://localhost:8080/simple/`.
+
+Add the package with that index. `uv` appends the URL to `pyproject.toml`, so later `uv lock` and `uv sync` keep using it:
 
 ```bash
-uv add "data-analytics_<...>==0.1.0.dev1" \
-  --extra-index-url https://test.pypi.org/simple/ \
-  --index-strategy unsafe-best-match
+uv add data-analytics --index http://localhost:8080/simple/
 ```
+
+The project currently records both URLs:
+
+```toml
+[[tool.uv.index]]
+url = "http://localhost:8080/simple/"
+
+
+
+These indexes are used in addition to PyPI. Start the local server before `uv lock` or `uv sync`.
