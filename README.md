@@ -41,24 +41,21 @@ streamlit run src/app.py
 ```
 
 
-If you are using Visual Studio Code or Cursor, select the Python interpreter at `.venv/bin/python`. The **Debug Streamlit** launch configuration starts `src/app.py` under the debugger.
+If you are using Visual Studio Code or Cursor, select the Python interpreter at `.venv/bin/python`.
 
 ## Install the workshop package from a local index
 
-`data-analytics` (`>=0.3.0`) comes from a local package index. `pyproject.toml` lists that server twice, as `localhost` and as `127.0.0.1`. `uv.lock` resolves packages from `http://localhost:8080/simple/`.
-
-Add the package with that index. `uv` appends the URL to `pyproject.toml`, so later `uv lock` and `uv sync` keep using it:
-
-```bash
-uv add data-analytics --index http://localhost:8080/simple/
-```
-
-The project currently records both URLs:
+`data-analytics` is pinned to `0.2.0` and comes from one local package index, used in addition to PyPI. `pyproject.toml` records it as:
 
 ```toml
 [[tool.uv.index]]
 url = "http://localhost:8080/simple/"
+```
 
+`uv.lock` resolves `data-analytics` from `http://localhost:8080/simple/`. Start that server before `uv lock` or `uv sync`.
 
+To add the package from that index again:
 
-These indexes are used in addition to PyPI. Start the local server before `uv lock` or `uv sync`.
+```bash
+uv add data-analytics --index http://localhost:8080/simple/
+```
