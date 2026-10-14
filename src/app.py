@@ -12,8 +12,11 @@ import streamlit as st
 from data_analytics.column_statistics import (
     calculate_max_of_column,
     calculate_min_of_column,
-    # calculate_span_of_column,
 )
+
+# Workshop: comment out the next line to hide active duration, and comment
+# it back in once calculate_span_of_column is part of the package.
+# from data_analytics.column_statistics import calculate_span_of_column
 
 API_URL = "https://groundhog-day.com/api/v1/groundhogs"
 
@@ -66,19 +69,18 @@ def predictions_to_dataframe(groundhogs: list[dict]) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def add_year_range_label(df: pd.DataFrame) -> pd.DataFrame:
-    """Add ``prediction_years`` text from start/end columns."""
-    out = df.copy()
+def year_span(years: pd.DataFrame):
+    """Years between first and last prediction.
 
-    def _label(row: pd.Series) -> str:
-        start = row.get("prediction_start_year")
-        end = row.get("prediction_end_year")
-        if pd.isna(start) or pd.isna(end):
-            return "—"
-        return f"{int(start)}–{int(end)}"
-
-    out["prediction_years"] = out.apply(_label, axis=1)
-    return out
+    Returns None when the calculate_span_of_column import above is commented out.
+    """
+    try:
+        span = calculate_span_of_column(years, "year")
+    except NameError:
+        return None
+    if pd.isna(span):
+        return None
+    return span
 
 
 def groundhog_summary_stats(pred_df: pd.DataFrame) -> pd.DataFrame:
@@ -95,7 +97,7 @@ def groundhog_summary_stats(pred_df: pd.DataFrame) -> pd.DataFrame:
         )
         meta["prediction_start_year"] = calculate_min_of_column(sub_y, "year")
         meta["prediction_end_year"] = calculate_max_of_column(sub_y, "year")
-        # meta["prediction_year_span"] = calculate_span_of_column(sub_y, "year")
+        meta["prediction_year_span"] = year_span(sub_y)
         shadow_known = group["shadow"].dropna()
         meta["p_saw_shadow_if_known"] = (
             float(shadow_known.astype("float64").mean())
@@ -132,8 +134,7 @@ def groundhog_catalog_table(
             "groundhog_id",
             "prediction_start_year",
             "prediction_end_year",
-            # "prediction_year_span",
-            "prediction_years",
+            "prediction_year_span",
             "p_saw_shadow_if_known",
         ]
     ].drop_duplicates(subset=["groundhog_id"])
@@ -163,9 +164,6 @@ prediction:
 
 - If the groundhog ‘sees its shadow’, it means 6 more weeks of winter
 - If the groundhog doesn’t see its shadow, spring will come early
-
-More background and listings of prognosticators:
-[GROUNDHOG-DAY.com](https://groundhog-day.com/).
 """
     )
 
@@ -184,24 +182,30 @@ More background and listings of prognosticators:
 
     pred_df = predictions_to_dataframe(groundhogs)
     shadow_rows = groundhog_summary_stats(pred_df)
-    shadow_rows = add_year_range_label(shadow_rows)
 
     catalog_df = groundhog_catalog_table(pred_df, shadow_rows)
 
     st.subheader("Groundhogs")
-    st.caption(
+    notes = [
         "Prediction **timespan** uses ``calculate_min_of_column`` / "
-        "``calculate_max_of_column`` on ``year``; **active duration** uses "
-        "``calculate_span_of_column`` (last year minus first year). Shadow share "
-        "is the mean of ``shadow`` over years with a recorded value. API "
-        "provides text, images, and links."
+        "``calculate_max_of_column`` on ``year``."
+    ]
+    if "calculate_span_of_column" in globals():
+        notes.append(
+            "**Active duration** uses ``calculate_span_of_column`` "
+            "(last year minus first year)."
+        )
+    notes.append(
+        "Shadow share is the mean of ``shadow`` over years with a recorded value."
     )
+    st.caption(" ".join(notes))
     for _, row in catalog_df.sort_values("name").iterrows():
         ys, ye = row["prediction_start_year"], row["prediction_end_year"]
         if pd.notna(ys) and pd.notna(ye):
             span = f"{int(ys)}–{int(ye)}"
         else:
             span = "—"
+        span_years = row.get("prediction_year_span")
         title = f"{row['name']} · {span}"
         with st.expander(title, expanded=False):
             c1, c2 = st.columns([1, 2])
@@ -234,40 +238,8 @@ More background and listings of prognosticators:
                     st.caption(
                         f"Share of recorded years with shadow: **{rate:.1%}**"
                     )
-                # span_years = row.get("prediction_year_span")
-                # if pd.notna(span_years):
-                #     n = int(span_years)
-                #     st.caption(f"Active since **{n}** years.")
-
-    st.subheader("Active prediction years")
-    st.caption(
-        "First / last year = ``calculate_min_of_column`` / "
-        "``calculate_max_of_column`` on ``year`` per groundhog."
-    )
-    active_cols = [
-        "name",
-        "country",
-        "city",
-        "prediction_start_year",
-        "prediction_end_year",
-        "prediction_years",
-    ]
-    active_cols = [c for c in active_cols if c in shadow_rows.columns]
-    st.dataframe(
-        shadow_rows.sort_values("name")[active_cols],
-        use_container_width=True,
-        hide_index=True,
-        column_config={
-            "prediction_start_year": st.column_config.NumberColumn(
-                "First year",
-                format="%d",
-            ),
-            "prediction_end_year": st.column_config.NumberColumn(
-                "Last year",
-                format="%d",
-            ),
-        },
-    )
+                if pd.notna(span_years):
+                    st.caption(f"Active for **{int(span_years)}** years.")
 
 
 if __name__ == "__main__":
