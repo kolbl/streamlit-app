@@ -183,15 +183,15 @@ wheels = [
 
 [[package]]
 name = "data-analytics"
-version = "0.1.0"
+version = "0.2.0"
 source = { registry = "http://localhost:8080/simple/" }
 dependencies = [
     { name = "pandas" },
     { name = "pip" },
 ]
-sdist = { url = "http://localhost:8080/packages/data_analytics-0.1.0.tar.gz", hash = "sha256:f1a9ea347eb67323ca3fab2c811d139496233fc1c88be0aa4b4e94c9e42ebafa" }
+sdist = { url = "http://localhost:8080/packages/data_analytics-0.2.0.tar.gz", hash = "sha256:3c4017e0270314360f0b66cc4649f318a398d90dfb161f1a81c71e9bb4358b0d" }
 wheels = [
-    { url = "http://localhost:8080/packages/data_analytics-0.1.0-py3-none-any.whl", hash = "sha256:bc25e8f68d486cdc8a591a31206ab5710c4a351a65bd0c332e18ab73b1d27d8a" },
+    { url = "http://localhost:8080/packages/data_analytics-0.2.0-py3-none-any.whl", hash = "sha256:983546192c5bfed6c423ec71d76f6d796317edb63c6e556fb6501e7701d997fc" },
 ]
 
 [[package]]
@@ -825,7 +825,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "data-analytics", specifier = "==0.1.0" },
+    { name = "data-analytics", specifier = "==0.2.0" },
     { name = "streamlit", specifier = ">=1.56.0" },
 ]
 

@@ -16,7 +16,7 @@ from data_analytics.column_statistics import (
 
 # Workshop: comment out the next line to hide active duration, and comment
 # it back in once calculate_span_of_column is part of the package.
-# from data_analytics.column_statistics import calculate_span_of_column
+from data_analytics.column_statistics import calculate_span_of_column
 
 API_URL = "https://groundhog-day.com/api/v1/groundhogs"
 
